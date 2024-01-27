@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubscriptionService {
@@ -30,8 +31,9 @@ public class SubscriptionService {
         subscription.setSubscriptionType(subscriptionEntryDto.getSubscriptionType());
         subscription.setStartSubscriptionDate(new Date());
         int userId=subscriptionEntryDto.getUserId();
-        User user=userRepository.findById(userId).get();
+        Optional<User> user=userRepository.findById(userId);
         int totalAmountPaid=0;
+        if(user.isPresent()){
         if(subscriptionEntryDto.getSubscriptionType().equals("BASIC")){
             totalAmountPaid=500+200*subscriptionEntryDto.getNoOfScreensRequired();
         }
@@ -42,8 +44,9 @@ public class SubscriptionService {
             totalAmountPaid=1000+350*subscriptionEntryDto.getNoOfScreensRequired();
         }
         subscription.setTotalAmountPaid(totalAmountPaid);
-        subscription.setUser(user);
-        userRepository.save(user);
+        subscription.setUser(user.get());
+        userRepository.save(user.get());
+    }
         return totalAmountPaid;
     }
 
@@ -52,7 +55,11 @@ public class SubscriptionService {
         //If you are already at an ElITE subscription : then throw Exception ("Already the best Subscription")
         //In all other cases just try to upgrade the subscription and tell the difference of price that user has to pay
         //update the subscription in the repository
-        User user=userRepository.findById(userId).get();
+        Optional<User> user2=userRepository.findById(userId);
+        if(user2.isEmpty()){
+            return 0;
+        }
+        User user=user2.get();
         Subscription subscription=user.getSubscription();
         int noOfScreens=subscription.getNoOfScreensSubscribed();
         int currentAmount=subscription.getTotalAmountPaid();
@@ -75,11 +82,11 @@ public class SubscriptionService {
         //We need to find out total Revenue of hotstar : from all the subscriptions combined
         //Hint is to use findAll function from the SubscriptionDb
 
-        List<User> users=userRepository.findAll();
+        List<Subscription> list=subscriptionRepository.findAll();
         int totalRevenue=0;
-        for(User user:users){
-            Subscription subscription=user.getSubscription();
-            totalRevenue+=subscription.getTotalAmountPaid();
+        for(Subscription sub:list){
+            
+            totalRevenue+=sub.getTotalAmountPaid();
         }
         return totalRevenue;
     }
