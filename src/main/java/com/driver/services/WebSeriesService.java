@@ -32,7 +32,7 @@ public class WebSeriesService {
             return -1;
         }
         WebSeries web=webSeriesRepository.findBySeriesName(webSeriesEntryDto.getSeriesName());
-        if(web.equals(null)){
+        if(!web.equals(null)){
             throw new Exception("Series is already present");
         }
         else{

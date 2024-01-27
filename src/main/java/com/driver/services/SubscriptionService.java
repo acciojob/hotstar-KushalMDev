@@ -68,18 +68,18 @@ public class SubscriptionService {
             throw new Exception("Already the best Subscription");
         }
         else if(subscriptionType.equals(SubscriptionType.BASIC)){
-            int upgradeSubscription=800+250*noOfScreens;
+            int upgradeSubscription=300+50*noOfScreens;
             subscription.setSubscriptionType(SubscriptionType.PRO);
-            subscription.setTotalAmountPaid(upgradeSubscription);
+            subscription.setTotalAmountPaid(upgradeSubscription+currentAmount);
             subscriptionRepository.save(subscription);
-            return upgradeSubscription-currentAmount;
+            return upgradeSubscription;
         }
         else{
-            int upgradeSubscription=1000+350*noOfScreens;
+            int upgradeSubscription=200+100*noOfScreens;
             subscription.setSubscriptionType(SubscriptionType.ELITE);
             subscription.setTotalAmountPaid(upgradeSubscription);
             subscriptionRepository.save(subscription);
-            return upgradeSubscription-currentAmount;
+            return upgradeSubscription;
         }
     }
 
