@@ -34,10 +34,10 @@ public class SubscriptionService {
         Optional<User> user=userRepository.findById(userId);
         int totalAmountPaid=0;
         if(user.isPresent()){
-        if(subscriptionEntryDto.getSubscriptionType().equals("BASIC")){
+        if(subscriptionEntryDto.getSubscriptionType().equals(SubscriptionType.BASIC)){
             totalAmountPaid=500+200*subscriptionEntryDto.getNoOfScreensRequired();
         }
-        else if(subscriptionEntryDto.getSubscriptionType().equals("PRO")){
+        else if(subscriptionEntryDto.getSubscriptionType().equals(SubscriptionType.PRO)){
             totalAmountPaid=800+250*subscriptionEntryDto.getNoOfScreensRequired();
         }
         else{
